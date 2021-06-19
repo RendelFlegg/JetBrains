@@ -3,8 +3,8 @@ import statistics
 
 def get_results(file):
     with open(file, "r") as f:
-        raw_results = [applicant.rsplit(" ", 7) for applicant in f.read().splitlines()]
-    list_of_keys = ["phys_exam", "chem_exam", "math_exam", "com_science_exam", "plan_a", "plan_b", "plan_c"]
+        raw_results = [applicant.rsplit(" ", 8) for applicant in f.read().splitlines()]
+    list_of_keys = ["phys_exam", "chem_exam", "math_exam", "com_science_exam", "adm_exam", "plan_a", "plan_b", "plan_c"]
     for result in raw_results:
         results[result[0]] = dict(zip(list_of_keys, result[1:]))
 
@@ -25,6 +25,8 @@ def department_sorting(department, applicants, stage):
 def exam_grade(applicant, stage):
     applicant_exams = [exam for exam in exams[results[applicant][stage]]]
     grade = statistics.mean([float(results[applicant][exam]) for exam in applicant_exams])
+    if grade < float(results[applicant]["adm_exam"]):
+        grade = float(results[applicant]["adm_exam"])
     return grade
 
 
@@ -68,7 +70,7 @@ exams = {"Biotech": {"chem_exam", "phys_exam"},
          "Physics": {"phys_exam", "math_exam"}}
 results = {}
 
-get_results("applicant_list_6.txt")
+get_results("applicant_list_7.txt")
 while len(departments) != 0 and len(students) != len(results):
     rotate()
 save_results()
